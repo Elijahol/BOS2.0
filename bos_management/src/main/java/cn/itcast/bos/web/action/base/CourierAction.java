@@ -117,8 +117,8 @@ public class CourierAction extends ActionSupport implements
 					// 进行收派标准名称 模糊查询
 					// standard.name like %?%
 					Predicate p4 = cb.like(
-							standardRoot.get("name").as(String.class), courier
-									.getStandard().getName());
+							standardRoot.get("name").as(String.class), "%"
+									+ courier.getStandard().getName() + "%");
 					list.add(p4);
 				}
 				return cb.and(list.toArray(new Predicate[0]));
@@ -132,6 +132,26 @@ public class CourierAction extends ActionSupport implements
 		result.put("total", pageData.getTotalElements());
 		result.put("rows", pageData.getContent());
 		ActionContext.getContext().getValueStack().push(result);
+		return SUCCESS;
+	}
+
+	private String ids;
+
+	public void setIds(String ids) {
+		this.ids = ids;
+	}
+
+	// courier_delBatch
+	@Action(value = "courier_delBatch", results = { @Result(name = "success", location = "./pages/base/courier.html", type = "redirect") })
+	public String delBatch() {
+		courierService.delBatch(ids);
+		return SUCCESS;
+	}
+
+	// courier_restoreBatch
+	@Action(value = "courier_restoreBatch", results = { @Result(name = "success", location = "./pages/base/courier.html", type = "redirect") })
+	public String restoreBatch() {
+		courierService.restoreBatch(ids);
 		return SUCCESS;
 	}
 }

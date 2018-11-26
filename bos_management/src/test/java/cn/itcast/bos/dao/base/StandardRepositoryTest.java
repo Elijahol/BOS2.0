@@ -28,4 +28,5 @@ public class StandardRepositoryTest {
 	public void testQuery1(){
 		System.out.println(standardRepository.findStandardsWithMaxWeightBetween(30, 40));
 	}
+	
 }

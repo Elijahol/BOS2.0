@@ -11,5 +11,9 @@ public interface CourierService {
 	public void save(Courier courier);
 	//无条件分页查询
 	public Page<Courier> findPageData(Specification<Courier> specification,Pageable pageable);
+	//批量删除
+	public void delBatch(String ids);
+	//批量还原
+	public void restoreBatch(String ids);
 
 }

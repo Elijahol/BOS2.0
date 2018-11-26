@@ -28,4 +28,23 @@ public class CourierServiceImpl implements CourierService {
 		return courierRepository.findAll(specification, pageable);
 	}
 
+	@Override
+	public void delBatch(String ids) {
+		String[] idArray = ids.split(",");
+		for (String idStr : idArray) {
+			Integer id = Integer.parseInt(idStr);
+			courierRepository.updateTag(id,'1');
+		}
+	}
+
+	@Override
+	public void restoreBatch(String ids) {
+		String[] idArray = ids.split(",");
+		for (String idStr : idArray) {
+			Integer id = Integer.parseInt(idStr);
+			courierRepository.updateTag(id,null);
+		}
+	}
+	
+
 }

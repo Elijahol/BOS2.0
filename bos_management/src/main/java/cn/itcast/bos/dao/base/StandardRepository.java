@@ -26,4 +26,7 @@ public interface StandardRepository extends JpaRepository<Standard, Integer> {
 	@Query(value = "from Standard where maxWeight between ?1 and ?2")
 	public List<Standard> findStandardsWithMaxWeightBetween(Integer start,
 			Integer end);
+	
+	//根据收派标准名称删除
+//	public void deleteByName(String name);
 }

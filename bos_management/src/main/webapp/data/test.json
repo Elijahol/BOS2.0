@@ -1,0 +1,7 @@
+{
+	"total":2,
+	"rows":[
+		{"id":"dq001","company":"北京中关村软件园办公室","fixedAreaLeader":"小明","fixedAreaName":"中关村软件园","operatingCompany":null,"operatingTime":null,"operator":null,"telephone":"123213123123"},
+		{"id":"dq002","company":"海淀区城管局","fixedAreaLeader":"小美","fixedAreaName":"建材城西路","operatingCompany":null,"operatingTime":null,"operator":null,"telephone":"1231123123123"}
+	]
+}
