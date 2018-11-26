@@ -14,14 +14,9 @@
 		http://www.springframework.org/schema/data/jpa 
 		http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
 		http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd">
-	
-	<!-- 扫描 @Server @Controller @Repository -->
-	<context:component-scan base-package="cn.itcast"/>
-
-	<!-- 加载properties文件 -->
-	<context:property-placeholder location="classpath:config.properties" />
-	
-	<!-- 引入 数据库连接配置文件  -->
-	<import resource="applicationContext-dataSource.xml"/>
-	<import resource="applicationContext-webService.xml"/>
+	<jaxrs:server id="customerService" address="/customerService">
+		<jaxrs:serviceBeans>
+			<bean class="cn.itcast.crm.service.impl.CustomerServiceImpl"/>
+		</jaxrs:serviceBeans>
+	</jaxrs:server>
 </beans>

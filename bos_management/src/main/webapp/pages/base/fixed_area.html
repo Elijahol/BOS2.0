@@ -47,9 +47,25 @@
 			function doSearch(){
 				$('#searchWindow').window("open");
 			}
-			
+			//关联客户窗口
 			function doAssociations(){
-				$('#customerWindow').window('open');
+				//判断用户是否只选择了一个定区
+				var row = $("#grid").datagrid('getSelections');
+				if(row.length == 1){
+					$('#customerWindow').window('open');
+					//将选中定区id,设置到form的隐藏域
+					$("#customerFixedAreaId").val(rows[0].id);
+					//发送请求
+					$.post("../../fixedArea_findNoAssociationCustomers",function(data){
+						//查询所有未关联定区客户列表
+					});
+					$.post("../../fixedArea_findHasAssociationCustomers",{"id":rows[0].id},function(data){
+						//查询所有未关联定区客户列表
+					});
+				}else{
+					//没有或多选
+					$.messager.alert('警告','定区关联客户必须（只能）选择一个定区','warnging');
+				}
 			}
 			
 			//工具栏
