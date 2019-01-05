@@ -41,7 +41,14 @@
 			}
 			
 			function doDelete(){
-				alert("删除...");
+				//当前datagrid选中的数据
+				var rows = $("#grid").datagrid('getSelections');
+				if(rows.length < 1){
+					//没选或多选
+					$.messager.alert("提示信息","删除数据时, 至少选择一条数据","warning");
+				}else{
+					console.log(rows);
+				}
 			}
 			
 			function doSearch(){
@@ -50,17 +57,35 @@
 			//关联客户窗口
 			function doAssociations(){
 				//判断用户是否只选择了一个定区
-				var row = $("#grid").datagrid('getSelections');
-				if(row.length == 1){
-					$('#customerWindow').window('open');
+				var rows = $("#grid").datagrid('getSelections');
+				if(rows.length == 1){
+					
 					//将选中定区id,设置到form的隐藏域
 					$("#customerFixedAreaId").val(rows[0].id);
-					//发送请求
-					$.post("../../fixedArea_findNoAssociationCustomers",function(data){
-						//查询所有未关联定区客户列表
+					//显示进度条
+					$.messager.progress({
+						interval:500 //每0.5秒加载10%
 					});
-					$.post("../../fixedArea_findHasAssociationCustomers",{"id":rows[0].id},function(data){
+					//发送请求
+					$.post("../../fixedArea_findNoAssociationCustomers.action",function(data){
+						$("#noassociationSelect").empty();
 						//查询所有未关联定区客户列表
+						$(data).each(function(){
+							var option = $("<option value='"+this.id+"'>"+this.username+"("+this.address+")</option>")
+							$("#noassociationSelect").append(option);
+						});
+						//请求回来后,关闭进度条
+						$.messager.progress('close');
+						$('#customerWindow').window('open');
+					});
+					
+					$.post("../../fixedArea_findHasAssociationCustomers.action",{"id":rows[0].id},function(data){
+						$("#associationSelect").empty();
+						//查询所有未关联定区客户列表
+						$(data).each(function(){
+							var option = $("<option value='"+this.id+"'>"+this.username+"("+this.address+")</option>")
+							$("#associationSelect").append(option);
+						});
 					});
 				}else{
 					//没有或多选
@@ -105,6 +130,8 @@
 						// 只选择了一个定区
 						// 弹出定区关联快递员 窗口 
 						$("#courierWindow").window('open');
+						//保存选中定区id到表单隐藏域
+						$("#courierFixedAreaId").val(rows[0].id);
 					}else{
 						// 没有选中定区，或者选择 了多个定区
 						$.messager.alert("警告","关联快递员,只能（必须）选择一个定区","warning");
@@ -205,6 +232,30 @@
 						$.messager.alert("警告","表单存在非法数据项","warning");
 					}
 				});
+				
+				//向右移动
+				$("#toRight").click(function(){
+					$("#associationSelect").append($("#noassociationSelect option:selected"));
+				});
+				//向左移动
+				$("#toLeft").click(function(){
+					$("#noassociationSelect").append($("#associationSelect option:selected"));
+				});
+				//未关联客户阿牛添加事件
+				$("#associationBtn").click(function(){
+					//选中所有已关联客户select中的选项
+					$("#associationSelect option").attr('selected','selected');
+					$("#customerForm").submit();
+				});
+				//为关联快递员按钮,添加click
+				$("#associationCourierBtn").click(function(){
+					if($("#courierForm").form('validate')){
+						$("#courierForm").submit();
+					}else{
+						$.messager.alert("警告","表单中存在非法字符","warning");
+					}
+				});
+				
 			});
 		
 			function doDblClickRow(){
@@ -457,17 +508,17 @@
 							<td>
 								<!-- 存放定区编号 -->
 								<input type="hidden" name="id" id="courierFixedAreaId" />
-								<!-- <input type="text" name="courierId" class="easyui-combobox" required="true" 
+								<input type="text" name="courierId" class="easyui-combobox" required="true" 
 									data-options="url:'../../courier_findnoassociation.action',
-										valueField:'id',textField:'info'"/> -->
+										valueField:'id',textField:'info'"/>
 							</td>
 						</tr>
 						<tr>
 							<td>选择收派时间</td>
 							<td>
-								<!-- <input type="text" name="takeTimeId" class="easyui-combobox" required="true"
+								<input type="text" name="takeTimeId" class="easyui-combobox" required="true"
 									data-options="url:'../../taketime_findAll.action', 
-									valueField:'id',textField:'name'" /> -->
+									valueField:'id',textField:'name'" />
 							</td>
 						</tr>
 						<tr>

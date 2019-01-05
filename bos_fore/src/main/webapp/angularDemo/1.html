@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>AngularJS双向数据绑定</title>
+		<script type="text/javascript" src="../js/angular.min.js"></script>
+	</head>
+	<!-- ng-app是angular编程的入口，更新驶入，模型会自动更新 -->
+	<body ng-app>
+		<div>
+			<!-- ng-model模型作用 -->
+			<input type="text" name="name" ng-model="name">
+		</div>
+		<div>
+			<!-- {{}} euqalvant to "ng-bind" used to data viewing -->
+			Hello, {{name}}
+		</div>
+	</body>
+</html>

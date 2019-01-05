@@ -154,4 +154,10 @@ public class CourierAction extends ActionSupport implements
 		courierService.restoreBatch(ids);
 		return SUCCESS;
 	}
+	@Action(value="courier_findnoassociation",results={@Result(name="success",type="json")})
+	public String findnoassociation(){
+		List<Courier> couriers = courierService.findNoAssociation();
+		ActionContext.getContext().getValueStack().push(couriers);
+		return SUCCESS;
+	}
 }

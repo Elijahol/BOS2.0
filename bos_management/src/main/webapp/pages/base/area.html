@@ -43,7 +43,26 @@
 			}
 			
 			function doDelete(){
-				alert("删除...");
+				//当前datagrid选中的数据
+				var rows = $("#grid").datagrid('getSelections');
+				if(rows.length < 1){
+					//没选或多选
+					$.messager.alert("提示信息","删除数据时, 至少选择一条数据","warning");
+				}else{
+					var ids = new Array();
+					for(var i=0;i<rows.length;i++){
+						ids.push(rows[i].id);
+					}
+					var idsStr = ids.join("-");
+					console.log(idsStr);
+					$.get("../../area_delete.action?ids="+idsStr,function(res){
+						if(res == "1"){
+							ids = new Array();
+							idsStr = "";
+							window.location.href = "area.html";
+						}
+					},"json");
+				}
 			}
 			
 			//工具栏
@@ -157,7 +176,8 @@
 						}
 					},
 					onComplete:function(response){
-						alert("文件上传成功！");
+						/* alert("文件上传成功！"); */
+						window.location.href = "area.html";
 					}
 				});
 				//区域查询按钮点击事件

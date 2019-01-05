@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>BootStrap+AngularJS分页显示</title>
+		<script type="text/javascript" src="../js/jquery.js"></script>
+		<script type="text/javascript" src="../js/bootstrap.js"></script>
+		<link rel="stylesheet" href="../css/bootstrap/bootstrap.css" />
+		<script type="text/javascript" src="../js/angular.min.js"></script>
+	</head>
+	<body ng-app="paginationApp" ng-controller="paginationCtrl">
+		<table class="table table-hover table-bordered">
+			<tr>
+				<th>序号</th>
+				<th>商品编号</th>
+				<th>名称</th>
+				<th>价格</th>
+			</tr>
+			<tr ng-repeat="product in products">
+				<td>{{$index+1}}</td>
+				<td>{{product.id}}</td>
+				<td>{{product.name}}</td>
+				<td>{{product.price}}</td>
+			</tr>
+		</table>
+		<div>
+			<ul class="pagination pull-right">
+				<li>
+					<a href ng-click="prev()">上一页</a>
+				</li>
+				<li ng-repeat="page in pageList" ng-class="{active:isActivePage(page)}">
+					<a href ng-click="selectPage(page)">{{page}}</a>
+				</li>
+				<li>
+					<a href ng-click="next()">下一页</a>
+				</li>
+			</ul>
+		</div>
+	</body>
+	<script type="text/javascript">
+		var paginationApp = angular.module("paginationApp",[]);
+		paginationApp.controller("paginationCtrl",["$scope","$http",function($scope,$http){
+			//分页组件必要变量
+			$scope.currentPage = 1;
+			$scope.pageSize = 4;
+			$scope.totalCount = 0;
+			$scope.totalPages = 0;
+			//要在分页工具条显示所有的页码
+			$scope.pageList = new Array();
+			//加载上一页数据
+			$scope.prev = function(){
+				$scope.selectPage($scope.currentPage - 1);
+			}
+			//加载下一页数据
+			$scope.next = function(){
+				$scope.selectPage($scope.currentPage + 1);
+			}
+			//加载指定业数据
+			$scope.selectPage = function(page){
+				//超出范围
+				if($scope.totalPages != 0 && (page < 1 || page > $scope.totalPages)){
+					return;
+				}
+				$http({
+					method:'GET',
+					url:'6_'+page+'.json',
+					params:{
+						page:page,
+						pageSize:$scope.pageSize
+					}
+				}).success(function(data,status,headers,config){
+					$scope.products = data.products;
+					//根据总记录数计算 总页数
+					$scope.totalCount = data.totalCount;
+					$scope.totalPages = Math.ceil($scope.totalCount / $scope.pageSize);
+					//更新当前显示页码
+					$scope.currentPage = page;
+					//显示分页工具条页码
+					var begin;
+					var end;
+					//理论上begin是当前页-5
+					begin = $scope.currentPage - 5;
+					if(begin < 1){
+						begin = 1;
+					}
+					//显示10个页码,理论上end是begin+9
+					end = begin + 9;
+					if(end > $scope.totalPages){
+						end = $scope.totalPages;
+					}
+					//修正begin,理论上begin是end -9
+					begin = end - 9;
+					if(begin < 1){
+						begin = 1;
+					}
+					//将页码加入PageList
+					for(var i=begin;i<=end;i++){
+						$scope.pageList.push(i);
+					}
+					
+				}).error(function(data,status,headers,config){
+					alert("出错，请联系管理员");
+				});
+				
+			}
+			//判断当前页码
+			$scope.isActivePage = function(page){
+				return page === $scope.currentPage;
+			}
+			//初始化,选中第一页
+			$scope.selectPage(1);
+		}]);
+	</script>
+</html>

@@ -29,6 +29,19 @@
 						$('#orderForm').submit();
 					}
 				});
+				//对订单号输入项添加blur事件
+				$("#orderNum").blur(function(){
+					$.post("../../order_findByOrderNum.action",{orderNum:$(this).val()},function(data){
+						//封装结果数据
+						if(data.success){
+							$("#wayBillForm").form('load',data.orderData);
+						}else{
+							//订单不存在,重置
+							console.log($("#wayBillForm"));
+							$("#wayBillForm").get(0).reset();
+						}
+					});
+				});
 			});
 		</script>
 	</head>
@@ -40,6 +53,7 @@
 			<a id="no" icon="icon-no" href="#" class="easyui-linkbutton" plain="true">取消</a>
 		</div>
 		<div style="width:95%;margin:10px auto">
+			<form id="wayBillForm" method="post" action="">
 			<div class="table-top">
 				<table class="table-edit" width="95%">
 					<tr class="title">
@@ -49,7 +63,7 @@
 						<td>订单号</td>
 						<td>
 							<input type="hidden" name="order.id" id="orderId" />
-							<input type="text" name="order.orderNum" />
+							<input type="text" name="order.orderNum" id="orderNum" />
 						</td>
 						<td>运单号</td>
 						<td>
@@ -264,6 +278,7 @@
 
 					</table>
 				</div>
+				</form>
 			</div>
 			<div class="clearfix"></div>		
 		</div>

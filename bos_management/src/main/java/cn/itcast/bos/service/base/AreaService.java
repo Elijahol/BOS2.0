@@ -14,5 +14,7 @@ public interface AreaService {
 
 	public Page<Area> findPageData(Specification<Area> specification,
 			Pageable pageable);
+	//批量删除
+	public void batchDelete(String ids);
 
 }

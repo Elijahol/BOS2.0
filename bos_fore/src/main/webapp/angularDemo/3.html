@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>AngularJS基于模块的MVC复杂操作</title>
+		<script type="text/javascript" src="../js/angular.min.js"></script>
+	</head>
+	<!-- ng-app是angular编程的入口，更新驶入，模型会自动更新 -->
+	<body>
+		<!-- ng-app="myapp"定义了一个模块 -->
+		<div ng-app="myapp" ng-controller="myctrl">
+			<div>
+				<!-- ng-model模型作用 -->
+				<input type="text" name="name" ng-model="name">
+				<!-- 提供按钮 -->
+				<input type="button" value="清空" ng-click="name=''">
+			</div>
+			<div>
+				<!-- {{}} euqalvant to "ng-bind" used to data viewing -->
+				Hello, {{name}}
+			</div>
+		</div>
+		
+		<script type="text/javascript">
+			//initialize the module "myapp"
+			var myapp = angular.module("myapp",[]);
+			//define the controller of module
+			//dependency injection, $scope is the domain object, 
+			//operate the current domain and view
+			myapp.controller("myctrl",["$scope",function($scope){
+				//initialize the model 
+				$scope.name = "Black House Programmer";
+				//在作用域提供clearVal
+				$scope.clearVal = function(){
+					$scope.name = "";//模型设置为空
+				}
+			}]);
+		</script>
+	</body>
+</html>

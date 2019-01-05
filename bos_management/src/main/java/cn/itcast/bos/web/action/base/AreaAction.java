@@ -19,6 +19,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
@@ -168,5 +169,18 @@ public class AreaAction extends BaseAction<Area> {
 		// 封装datagrid需要数据格式
 		pushPageDataToValueStack(pageData);
 		return SUCCESS;
+	}
+	
+	private String ids;
+
+	public void setIds(String ids) {
+		this.ids = ids;
+	}
+	@Action(value="area_delete")
+	public String batchDelete() throws IOException{
+		
+		areaService.batchDelete(ids);
+		ServletActionContext.getResponse().getWriter().print("1");
+		return NONE;
 	}
 }
